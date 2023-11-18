@@ -123,7 +123,7 @@ let fetch_handler = (elem) => {
 
 let handle_handler = (elem) => {
     let callback = elem.attributes.handler?.value
-    window[callback]()
+    window[callback](elem)
     if (elem.parentNode.attributes.statefull) {
         let index = elem.parentNode.attributes?.index?.value
         elem.parentNode.innerHTML = change_state(STATE_FULL_ELEMENTS[index])
@@ -137,7 +137,7 @@ let click_event = (event) => {
         if (srcElement.attributes.fetch) {
             fetch_handler(srcElement) 
         }
-        if (srcElement.attributes?.handler) {
+        else if (srcElement.attributes?.handler) {
             handle_handler(srcElement)
         }
     }
