@@ -1,19 +1,14 @@
-<div class="items">
-    
-    <div class="task">
-        <p>
-          {taskcontent}  
-        </p>
-    </div>
-    <div class="cross"
-    clickable
-    handler="crossit">
-        cross
-    </div>
-    <div class="delete"
-    clickable
-    handler="deleteit">
-        delete
-
-    </div>
-</div>
+<tr ng-repeat="task in tasks" class="items">
+    <td class="task_name">
+        {task_name}
+    </td>
+    <td class="task_status">{status}</td>
+    <td>
+        <button class="btn btn-danger" clickable handler="deleteit">
+            Delete
+        </button>
+        <button class="btn btn-success" clickable handler="crossit">
+            Finished
+        </button>
+    </td>
+</tr>

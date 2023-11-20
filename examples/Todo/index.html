@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <script src="./lilhx.js"></script>
+    <style>
+        .app-container {
+            height: 100vh;
+            width: 100%;
+        }
+        [crossed]{
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container d-flex align-items-center justify-content-center flex-column"
+    statefull>
+        <h3>{APP_NAME}</h3>
+        <div class="d-flex align-items-center mb-3">
+            <div class="form-group mr-3 mb-0">
+                <input type="text" class="form-control" placeholder="Enter a task here" id="tinput" 
+                oninput=""
+                />
+            </div>
+            <button type="none" class="btn btn-primary mr-3" clickable fetch="./todo.html" fetch_method="get"
+                handler="todo_func" target=".allTasks">
+                Save
+            </button>
+        </div>
+        <div class="table-wrapper">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>Todo item</th>
+                        <th>status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="allTasks">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        APP_NAME="TODO in lilhx.js"
+        deleteit = (elem) => {
+            elem.parentNode.parentNode.outerHTML = ""
+        }
+        todo_func = (elem, target, text) => {
+            let task = document.createElement("div")
+            let inputT = document.getElementById("tinput").value
+            document.getElementById("tinput").value = ""
+            target.prepend(task)
+            task.outerHTML = text.format({ task_name: inputT, status: "In progress" })
+
+        }
+        crossit = (elem) => {
+            let task = elem.parentNode.parentNode.querySelector(".task_name")
+            let status = elem.parentNode.parentNode.querySelector(".task_status")
+            if (task.getAttribute("crossed") == undefined) {
+                status.innerText = "Completed"
+                elem.parentNode.parentNode.classList.add("table-success")
+                task.setAttribute("crossed", "")
+            }
+            else {
+
+                elem.parentNode.parentNode.classList.remove("table-success")
+                status.innerText = "In progress"
+                task.removeAttribute("crossed")
+            }
+
+        }    
+    </script>
+</body>
+
+</html>
