@@ -36,7 +36,7 @@ let check_status = (response) => {
     }
 }
 
-let c_fetch = async (url, method, callback,error_callback) => {
+let c_fetch = async (url, method, callback, error_callback) => {
     let response = null;
     fetch(url, {
         method: method?.toUpperCase(),
@@ -51,8 +51,8 @@ let c_fetch = async (url, method, callback,error_callback) => {
         return response;
     })
 }
-let fetch_callback = (elem, target, x) => {
-    let __temp=null;
+let fetch_swap = (elem, target, x) => {
+    let __temp = null;
     switch (true) {
         case elem.attributes.swap_inner !== undefined:
             target.innerHTML = x;
@@ -82,19 +82,19 @@ let fetch_callback = (elem, target, x) => {
     }
 }
 
-let fetch_error=(elem,error)=>{
+let fetch_error = (elem, error) => {
     let e = elem.querySelector("error")
-    if(!e)
+    if (!e)
         return
     e.innerHTML = error.toString()
-    e.style.opacity=1
-    setTimeout(()=>{
-        e.style.opacity=0
-        setTimeout(()=>{
-        e.innerHTML=""
+    e.style.opacity = 1
+    setTimeout(() => {
+        e.style.opacity = 0
+        setTimeout(() => {
+            e.innerHTML = ""
 
-    },1000)
-    },2000)
+        }, 1000)
+    }, 2000)
     print(e.style.animation)
 }
 
@@ -103,6 +103,7 @@ let fetch_handler = (elem) => {
     let url = elem.attributes.fetch?.value
     let method = elem.attributes?.method
     let target = elem;
+    let fetch_callback = fetch_swap;
 
     method = method ? method : "get"
 
@@ -111,11 +112,14 @@ let fetch_handler = (elem) => {
     }
     
     if (callback && typeof window[callback] === 'function') {
-        fetch_callback = window[callback]
+        fetch_callback =(x,y,z)=>{
+          fetch_swap(x,y,z)
+          window[callback](x,y,z)
+        }
     }
     
     if (url && method) {
-        c_fetch(url, method, (x) => fetch_callback(elem, target, x),(x)=>fetch_error(elem,x))
+        c_fetch(url, method, (x) => fetch_callback(elem, target, x), (x) => fetch_error(elem, x))
     } else {
         print("Url Not Provided for fetch")
     }
@@ -131,14 +135,27 @@ let handle_handler = (elem) => {
     
 }
 
+let __handle_click = (srcElement) => {
+    if (srcElement.attributes.fetch) {
+        fetch_handler(srcElement)
+    }
+    else if (srcElement.attributes?.handler) {
+        handle_handler(srcElement)
+    }
+    
+    return -1;
+    
+}
+
 let click_event = (event) => {
     let srcElement = event.srcElement;
     if (srcElement && srcElement.attributes.clickable) {
-        if (srcElement.attributes.fetch) {
-            fetch_handler(srcElement) 
-        }
-        else if (srcElement.attributes?.handler) {
-            handle_handler(srcElement)
+        __handle_click(srcElement)
+    } else if (srcElement && srcElement.attributes.bubble) {
+        while (srcElement 
+               && srcElement.attributes.bubble 
+               &&__handle_click(srcElement.parentNode) == -1) {
+        srcElement = srcElement.parentNode
         }
     }
 }
@@ -152,8 +169,8 @@ let change_state = (text) => {
     const regex = /\{(?<variable>[^:}]+)[:]?(?<type>[^}]+)?\}/gi;
     const input = text;
     text = input.replace(regex, (_, variable, type) => {
-        variable=variable.replace(/[^a-z0-9_]/gi,"_")
-        if(type){
+        variable = variable.replace(/[^a-z0-9_]/gi, "_")
+        if (type) {
             if (type.toUpperCase() == "INT")
                 window[variable] ||= 0
             else if (type.toUpperCase() == "FLOAT")
@@ -166,12 +183,12 @@ let change_state = (text) => {
                 window[variable] ||= []
             else
                 window[variable] ||= 0;
-        }else{
+        } else {
             window[variable] ||= 0;
         }
 
         
-        STATES_VARS[variable]=window[variable]
+        STATES_VARS[variable] = window[variable]
         return STATES_VARS[variable]
 
     });
@@ -187,7 +204,7 @@ let load_all = ({ srcElement }) => {
         const storedDictionary = sessionStorage.getItem('STATES_VARS');
         if (storedDictionary) {
             STATES_VARS = JSON.parse(storedDictionary);
-            Object.assign(window,STATES_VARS)
+            Object.assign(window, STATES_VARS)
         } else {
             print("No saved State")
         }
