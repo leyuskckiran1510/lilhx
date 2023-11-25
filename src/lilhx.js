@@ -112,9 +112,9 @@ let fetch_handler = (elem) => {
     }
     
     if (callback && typeof window[callback] === 'function') {
-        fetch_callback =(x,y,z)=>{
-          fetch_swap(x,y,z)
-          window[callback](x,y,z)
+        fetch_callback = (x, y, z) => {
+            fetch_swap(x, y, z)
+            window[callback](x, y, z)
         }
     }
     
@@ -151,11 +151,11 @@ let click_event = (event) => {
     let srcElement = event.srcElement;
     if (srcElement && srcElement.attributes.clickable) {
         __handle_click(srcElement)
-    } else if (srcElement && srcElement.attributes.bubble) {
+    }
+    {
         while (srcElement 
-               && srcElement.attributes.bubble 
-               &&__handle_click(srcElement.parentNode) == -1) {
-        srcElement = srcElement.parentNode
+            && __handle_click(srcElement.parentNode) == -1) {
+            srcElement = srcElement.parentNode
         }
     }
 }
