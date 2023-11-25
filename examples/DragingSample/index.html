@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drageable Example</title>
+    <style type="text/css">
+        .iam{
+            display: flex;
+            flex-direction: row;
+            background: red;
+            min-width: 10vw;
+            min-height: 10vh;
+        }
+        .iam>*{
+            position: inherit;
+            background: blue;
+            width: 100px;
+            height: 100px;
+        }
+        .noam{
+            position: initial;
+            background: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="iam" attachable>
+    </div>
+    <div class="noam" dragable>
+        <h1>1</h1>
+    </div>
+    <div class="noam" dragable>
+        <h1>2</h1>
+    </div>
+    <div class="noam" dragable>
+        <h1>3</h1>
+    </div>
+    <div class="noam" dragable>
+        <h1>4</h1>
+    </div>
+    <div class="noam" dragable>
+        <h1>5</h1>
+    </div>
+    <div class="noam" dragable>
+        <h1>6</h1>
+    </div>
+    <div class="noam" dragable>
+        <h1>7</h1>
+    </div>
+    <div class="noam" dragable>
+        <h1>8</h1>
+    </div>
+
+</body>
+<script type="text/javascript">
+    var clicked = (...x) => {
+        console.log(...x)
+    }
+</script>
+
+</html>
+<script src="/src/lilhx.js"></script>

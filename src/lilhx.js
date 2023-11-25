@@ -1,8 +1,10 @@
 "use strict";
+
 let test = null;
-let print = console.log
+let _print = console.log
 let STATE_FULL_ELEMENTS = {}
 let STATES_VARS = { "lilx": 0 }
+
 String.prototype.format = String.prototype.format ||
     function () {
         "use strict";
@@ -95,7 +97,7 @@ let fetch_error = (elem, error) => {
 
         }, 1000)
     }, 2000)
-    print(e.style.animation)
+    _print(e.style.animation)
 }
 
 let fetch_handler = (elem) => {
@@ -121,7 +123,7 @@ let fetch_handler = (elem) => {
     if (url && method) {
         c_fetch(url, method, (x) => fetch_callback(elem, target, x), (x) => fetch_error(elem, x))
     } else {
-        print("Url Not Provided for fetch")
+        _print("Url Not Provided for fetch")
     }
 }
 
@@ -135,28 +137,39 @@ let handle_handler = (elem) => {
     
 }
 
-let __handle_click = (srcElement) => {
-    if (srcElement.attributes.fetch) {
-        fetch_handler(srcElement)
+let __handle_click = (target) => {
+    if (target.attributes.fetch) {
+        fetch_handler(target)
     }
-    else if (srcElement.attributes?.handler) {
-        handle_handler(srcElement)
+    else if (target.attributes?.handler) {
+        handle_handler(target)
     }
     
     return -1;
     
 }
 
-let click_event = (event) => {
-    let srcElement = event.srcElement;
-    if (srcElement && srcElement.attributes.clickable) {
-        __handle_click(srcElement)
+let __handle_drag = (element) => {
+    console.log("This elemnt is dragged", element)
+}
+
+let drag_event = (...x) => {
+    console.log(...x)
+    // if(event.target.attributes.dragable){
+    //     __handle_drag(target)
+
+    // }
+}
+
+let click_event = (target) => {
+    if (!target || target.attributes == undefined) {
+        return
     }
-    {
-        while (srcElement 
-            && __handle_click(srcElement.parentNode) == -1) {
-            srcElement = srcElement.parentNode
-        }
+    else if (target.attributes.clickable) {
+        __handle_click(target)
+    }
+    else {
+        click_event(target.parentNode)
     }
 }
 
@@ -198,7 +211,7 @@ let change_state = (text) => {
     return text;
 }
 
-let load_all = ({ srcElement }) => {
+let load_all = ({ target }) => {
     let pointer = 0;
     if (document.body.attributes.load_state != undefined) {
         const storedDictionary = sessionStorage.getItem('STATES_VARS');
@@ -206,11 +219,11 @@ let load_all = ({ srcElement }) => {
             STATES_VARS = JSON.parse(storedDictionary);
             Object.assign(window, STATES_VARS)
         } else {
-            print("No saved State")
+            _print("No saved State")
         }
     }
-    let traverse = (srcElement) => {
-        for (let child of srcElement?.childNodes) {
+    let traverse = (target) => {
+        for (let child of target?.childNodes) {
             if (child.attributes?.statefull) {
                 STATE_FULL_ELEMENTS[pointer] ||= child.innerHTML
                 child.setAttribute("index", pointer)
@@ -220,8 +233,88 @@ let load_all = ({ srcElement }) => {
             traverse(child)
         }
     }
-    traverse(srcElement)
+    traverse(target)
 }
 
-window.onclick = click_event;
+document.querySelectorAll("[dragable]").forEach(x => {
+    x.style.cursor = "pointer";
+})
+
+let follow_mouse = null;
+window.onclick = (event) => {
+    click_event(event.target)
+};
+window.onmousedown = (event) => {
+     
+    follow_mouse = {
+        target: null,
+        event: event,
+    }
+    let srcElement = event.target
+    if (srcElement.attributes?.dragable)
+        follow_mouse.target = event.target
+    else {
+        while (srcElement && srcElement.attributes && srcElement.attributes.dragable == undefined) {
+            srcElement = srcElement.parentNode
+        }
+        if (srcElement.attributes?.dragable) {
+            follow_mouse.target = srcElement 
+        }
+    }
+    if (follow_mouse.target && follow_mouse.target.style?.oldposition == undefined) {
+        follow_mouse.target.style.oldposition = follow_mouse.target.style.position
+    }
+}
+
+let do_attach = (dragged, _static) => {
+    // _print(dragged,_static)
+    _print(dragged.target.style.position, dragged.target.style.oldposition)
+    dragged.target.style.position = dragged.target.style.oldposition
+    _static.append(dragged.target)
+}
+
+window.onmouseup = (event) => {
+    let elem_under = document.elementsFromPoint(event.clientX, event.clientY)
+    _print(elem_under)
+    if (elem_under.length > 1) {
+        _print("here")
+        let __temp = elem_under[1]
+        let flag = 0
+        while (__temp && __temp.attributes) {
+            __temp = __temp.parentNode
+            if (__temp?.attributes?.attachable != undefined) {
+                elem_under = __temp
+                flag = 1
+                break
+            }
+        }
+        if (!flag) {
+            elem_under = elem_under[1]
+        }
+
+        
+    } else {
+        elem_under = elem_under[0]
+    }
+    if (follow_mouse && elem_under.attributes.attachable) {
+        do_attach(follow_mouse, elem_under)
+    }
+    
+    follow_mouse = null
+}
+
+window.onmousemove = (event) => {
+    if (follow_mouse && follow_mouse.target) {
+        let x = {
+            position: "absolute",
+            cursor: "pointer",
+            top: `${event.clientY - follow_mouse.event.offsetY}px`,
+            left: `${event.clientX - follow_mouse.event.offsetX}px`
+        }
+        Object.assign(follow_mouse.target.style, x)
+    }
+}
+
+
+
 window.onload = load_all;

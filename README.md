@@ -10,7 +10,7 @@ Lilhx incorporates a reactive state management system, enabling developers to ef
    - **Verbs:**
      1. **Fetch:**
         - Attribute: `fetch="url"`
-        - Method: `"get"` (default) or any HTTP method
+        - Method: `method="get"` (default) or any HTTP method
         - **Actions:**
             - `swap_inner`: Replace inner content
             - `swap_outer`: Replace the entire element
@@ -22,6 +22,21 @@ Lilhx incorporates a reactive state management system, enabling developers to ef
      2. **Stateful Actions:**
         - *Save State:* Use `save_state` attribute to persist the current state in the body.
         - *Load State:* Use `load_state` attribute to load a previously saved session state.
+#### ii. Drag Events:
+   - **Verbs:**
+        1. **Drag:**
+            - Attribute: `dragable`
+            - Destination: `attach_to="target"` requires attachable target,if not provided will attach to any attachables
+                            or will just float
+        2. **Attachable:**
+            - Attribute: `attachable`
+            - **Action:**
+                - `swap_inner`
+                - `swap_outer`
+                - `append`
+                - `prepend`
+            - Tigger:`callback` get's tiggred when dragable is draged to `this`
+
 
 #### ii. Other Working Features:
    - *Ongoing Development:* Lilhx is a work in progress and aims to provide a synergy of features from htmx and React. Stay tuned for more exciting updates and enhancements.
