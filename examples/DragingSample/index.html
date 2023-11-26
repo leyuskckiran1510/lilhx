@@ -12,12 +12,33 @@
             background: red;
             min-width: 10vw;
             min-height: 10vh;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-        .iam#\31{
-            background: forestgreen;
+
+        .iam#\31 {
+            background: royalblue;
         }
-        .iam#\32{
+
+        .iam#\32 {
             background: darkcyan;
+        }
+
+        .iam#\33 {
+            background: skyblue;
+        }
+
+        .iam#\34 {
+            background: aquamarine;
+        }
+
+        .iam#\35 {
+            background: cadetblue
+        }
+
+        .iam#\36 {
+            background: dodgerblue;
         }
 
         .iam>* {
@@ -44,8 +65,24 @@
 </head>
 
 <body>
-    <div class="iam" id="1" attachable swap_inner></div>
-    <div class="iam" id="2" attachable swap_outer></div>
+    <div class="iam" id="1" attachable swap_inner>
+        inner swapper
+    </div>
+    <div class="iam" id="2" attachable swap_outer>
+        outer swapper
+    </div>
+    <div class="iam" id="3" attachable after_child>
+        child_after
+    </div>
+    <div class="iam" id="4" attachable before_child>
+        child_before
+    </div>
+    <div class="iam" id="5" attachable append>
+        append
+    </div>
+    <div class="iam" id="6" attachable prepend>
+        prepend
+    </div>
     <div class="noam" dragable>
         <h1>1</h1>
     </div>
@@ -56,7 +93,7 @@
         <h1>3</h1>
     </div>
     <div class="noam" dragable float>
-        <h1>I amd floating hehahahaha</h1>
+        <h1>4 [float]</h1>
     </div>
     <div class="noam" dragable>
         <h1>5</h1>
@@ -64,11 +101,11 @@
     <div class="noam" dragable>
         <h1>6</h1>
     </div>
-    <div class="noam" dragable>
-        <h1>7</h1>
+    <div class="noam" dragable float>
+        <h1>7 [float]</h1>
     </div>
-    <div class="noam" dragable>
-        <h1>8</h1>
+    <div class="noam" dragable float>
+        <h1>8 [float]</h1>
     </div>
 
 </body>

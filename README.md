@@ -19,10 +19,11 @@ Lilhx incorporates a reactive state management system, enabling developers to ef
             - `n_swap`: Replace the nth child element (`n_swap=1` for the first child, `n_swap=n` for the nth child)
             - `callback`: Execute a custom function (`function_name`) on successful fetch response. The function receives three parameters: `element`, `target`, and `fetch_response`. The `fetch_response` is expected to be a text containing HTML/markup for the next state or the body of an element.
 
-     2. **Stateful Actions:**
+### ii. StateManagement
+   - **Stateful Actions:**
         - *Save State:* Use `save_state` attribute to persist the current state in the body.
         - *Load State:* Use `load_state` attribute to load a previously saved session state.
-#### ii. Drag Events:
+#### iiI. Drag Events:
    - **Verbs:**
         1. **Drag:**
             - Attribute: `dragable`
@@ -41,6 +42,15 @@ Lilhx incorporates a reactive state management system, enabling developers to ef
                 - `before_child` :- inserts before the child the mouse is on
                 - `after_child` :-  inserts after the child the mouse is on
             - Tigger:`callback` get's tiggred when dragable is draged to `this`
+   - **Stylying**
+        - `[dragable]`:- for designing the dragable components
+        - `[moving]` :-  for styling when the component is in middle of moving or currenlty moving/active
+        >PS:- their will be a style element added by lilhx in your rendred HTML,
+        >with `id` "lil_hx_stylesheet", which can be removed to remove the default 
+        >styling by lilhx
+
+        - `[nostyle]`:- put this in body/html tag to remove the lilhx style,if you don't know much about other way
+        
 
 
 #### ii. Other Working Features:
