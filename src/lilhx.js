@@ -287,13 +287,9 @@ window.onmousedown = (event) => {
             follow_mouse.old_state = srcElement
         }
     }
-    // if (follow_mouse.target && follow_mouse.target.style?.oldposition == undefined) {
-    //     follow_mouse.target.style.oldposition = follow_mouse.target.style.position
-    // }
 }
 
 let do_attach = (dragged, _static) => {
-    // _print(dragged,_static)
     dragged.target.style.position = dragged.target.style.oldposition
     _static.append(dragged.target)
 }
@@ -331,6 +327,10 @@ window.onmouseup = (event) => {
 
 window.onmousemove = (event) => {
     if (follow_mouse && follow_mouse.target) {
+        let __selection = window.getSelection()
+        if(__selection){
+            __selection.removeAllRanges()
+        }
         let x = {
             position: "absolute",
             cursor: "pointer",
