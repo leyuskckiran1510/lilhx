@@ -293,51 +293,86 @@ let do_attach = (dragged, _static) => {
     dragged.target.style.position = dragged.target.style.oldposition
     _static.append(dragged.target)
 }
+let SUCESS = 1
+let NOSUCESS = 0
 
-let check_attachable = (elem) => {
+let perform_attachable = (elem, follow_mouse) => {
     if (elem.length > 1) {
         for (let _elem of elem) {
             let __temp = _elem
+            let last_child = null;
             let flag = 0
             while (__temp && __temp.attributes) {
                 if (__temp.attributes?.attachable != undefined && elem.includes(__temp)) {
-                    return __temp;
+                    if (__temp.attributes?.prepend) {
+                        __temp.prepend(follow_mouse.target)
+                        return SUCESS
+                    } else if (__temp.attributes?.before_child) {
+                        __temp.insertBefore(follow_mouse.target, last_child)
+                        return SUCESS
+                    } else if (__temp.attributes?.after_child) {
+                        if (last_child && last_child?.nextSibling) {
+                            __temp.insertBefore(follow_mouse.target, last_child.nextSibling)
+                            return SUCESS
+                        }
+                    } else if (__temp.attributes?.swap_outer) {
+                        __temp.outerHTML = follow_mouse.target.outerHTML
+                        if (follow_mouse.target?.outerHTML && follow_mouse.target?.parentNode)
+                            follow_mouse.target.outerHTML = ""
+                        return SUCESS
+                    } else if (__temp.attributes?.swap_inner) {
+                        __temp.innerHTML = follow_mouse.target.outerHTML
+                        if (follow_mouse.target?.outerHTML && follow_mouse.target?.parentNode)
+                            follow_mouse.target.outerHTML = ""
+                        return SUCESS
+                    }
+                    __temp.append(follow_mouse.target)
+                    return SUCESS
                 }
+                last_child = __temp
                 __temp = __temp.parentNode
             }
         }
-    } else {
-        return elem[0]
     }
+    return NOSUCESS
 
 }
 window.onmouseup = (event) => {
     let elem_under = document.elementsFromPoint(event.clientX, event.clientY)
-    elem_under = check_attachable(elem_under)
-    follow_mouse?.target?.removeAttribute("style")
-    if (follow_mouse && follow_mouse?.target && elem_under?.attributes?.attachable) {
-        do_attach(follow_mouse, elem_under)
-    } else {
-        console.log(follow_mouse)
-        test = follow_mouse
+    let preserve_postion = ""
+    if (follow_mouse && follow_mouse.target) {
+        if (follow_mouse.target?.attributes && follow_mouse.target?.attributes?.float) {
+            preserve_postion = follow_mouse.target?.getAttribute("style")
+        }
+        follow_mouse.target?.removeAttribute("style")
+        if (perform_attachable(elem_under, follow_mouse) == NOSUCESS && follow_mouse.target?.attributes?.float) {
+            follow_mouse.target?.setAttribute("style", preserve_postion)
+            document.body.appendChild(follow_mouse.target)
+        }
     }
-    
     follow_mouse = null
 }
+
 
 window.onmousemove = (event) => {
     if (follow_mouse && follow_mouse.target) {
         let __selection = window.getSelection()
-        if(__selection){
+        if (__selection) {
             __selection.removeAllRanges()
         }
-        let x = {
+        test = follow_mouse
+        // let xcord = event.clientX + Math.min(follow_mouse.event.offsetX, follow_mouse.target.clientWidth )
+        // let ycord = event.clientY + Math.min(follow_mouse.event.offsetY, follow_mouse.target.clientHeight )
+
+        let xcord = event.clientX + follow_mouse.target.clientWidth * 0.1
+        let ycord = event.clientY + follow_mouse.target.clientHeight * 0.1
+        let new_style = {
             position: "absolute",
             cursor: "pointer",
-            top: `${event.clientY - follow_mouse.event.offsetY}px`,
-            left: `${event.clientX - follow_mouse.event.offsetX}px`
+            top: `${ycord}px`,
+            left: `${xcord}px`
         }
-        Object.assign(follow_mouse.target.style, x)
+        Object.assign(follow_mouse.target.style, new_style)
     }
 }
 
