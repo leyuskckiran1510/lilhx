@@ -6,29 +6,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drageable Example</title>
     <style type="text/css">
-        .iam{
+        .iam {
             display: flex;
             flex-direction: row;
             background: red;
             min-width: 10vw;
             min-height: 10vh;
         }
-        .iam>*{
+        .iam#\31{
+            background: forestgreen;
+        }
+        .iam#\32{
+            background: darkcyan;
+        }
+
+        .iam>* {
             position: inherit;
             background: blue;
             width: 100px;
             height: 100px;
+
+            margin: 10px;
+            padding: 0px 10px;
+
         }
-        .noam{
+
+        .noam {
             position: initial;
+            display: flex;
+            border-radius: 10px;
             background: green;
+            align-content: center;
+            align-items: center;
+            justify-content: space-around;
         }
     </style>
 </head>
 
 <body>
-    <div class="iam" attachable>
-    </div>
+    <div class="iam" id="1" attachable></div>
+    <div class="iam" id="2" attachable></div>
     <div class="noam" dragable>
         <h1>1</h1>
     </div>

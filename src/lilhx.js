@@ -5,6 +5,23 @@ let _print = console.log
 let STATE_FULL_ELEMENTS = {}
 let STATES_VARS = { "lilx": 0 }
 
+let MoveAble = (_self) => {
+    let self = _self
+    let parent = self.parentNode
+    let sibling = self?.nextSibling
+    return {
+        reset: () => {
+            self.removeAttribute("style")
+            if (sibling) {
+                sibling.outerHTML = `${self.outerHTML}${sibling.outerHTML}` 
+            } else {
+                parent.append(self)
+            }
+        },
+
+    }
+};
+
 String.prototype.format = String.prototype.format ||
     function () {
         "use strict";
@@ -240,64 +257,73 @@ document.querySelectorAll("[dragable]").forEach(x => {
     x.style.cursor = "pointer";
 })
 
-let follow_mouse = null;
 window.onclick = (event) => {
     click_event(event.target)
 };
+
+
+let follow_mouse = null;
 window.onmousedown = (event) => {
-     
+    if (follow_mouse && follow_mouse.target) {
+        follow_mouse.target.removeAttribute("style")
+        follow_mouse = null
+    }
     follow_mouse = {
         target: null,
         event: event,
+        old_state: null,
     }
     let srcElement = event.target
-    if (srcElement.attributes?.dragable)
+    if (srcElement.attributes?.dragable) {
         follow_mouse.target = event.target
+        follow_mouse.old_state = event.target
+    }
     else {
         while (srcElement && srcElement.attributes && srcElement.attributes.dragable == undefined) {
             srcElement = srcElement.parentNode
         }
         if (srcElement.attributes?.dragable) {
             follow_mouse.target = srcElement 
+            follow_mouse.old_state = srcElement
         }
     }
-    if (follow_mouse.target && follow_mouse.target.style?.oldposition == undefined) {
-        follow_mouse.target.style.oldposition = follow_mouse.target.style.position
-    }
+    // if (follow_mouse.target && follow_mouse.target.style?.oldposition == undefined) {
+    //     follow_mouse.target.style.oldposition = follow_mouse.target.style.position
+    // }
 }
 
 let do_attach = (dragged, _static) => {
     // _print(dragged,_static)
-    _print(dragged.target.style.position, dragged.target.style.oldposition)
     dragged.target.style.position = dragged.target.style.oldposition
     _static.append(dragged.target)
 }
 
-window.onmouseup = (event) => {
-    let elem_under = document.elementsFromPoint(event.clientX, event.clientY)
-    _print(elem_under)
-    if (elem_under.length > 1) {
-        _print("here")
-        let __temp = elem_under[1]
-        let flag = 0
-        while (__temp && __temp.attributes) {
-            __temp = __temp.parentNode
-            if (__temp?.attributes?.attachable != undefined) {
-                elem_under = __temp
-                flag = 1
-                break
+let check_attachable = (elem) => {
+    if (elem.length > 1) {
+        for (let _elem of elem) {
+            let __temp = _elem
+            let flag = 0
+            while (__temp && __temp.attributes) {
+                if (__temp.attributes?.attachable != undefined && elem.includes(__temp)) {
+                    return __temp;
+                }
+                __temp = __temp.parentNode
             }
         }
-        if (!flag) {
-            elem_under = elem_under[1]
-        }
-
-        
     } else {
-        elem_under = elem_under[0]
+        return elem[0]
     }
-    if (follow_mouse && elem_under.attributes.attachable) {
+
+}
+window.onmouseup = (event) => {
+    let elem_under = document.elementsFromPoint(event.clientX, event.clientY)
+    elem_under = check_attachable(elem_under)
+    follow_mouse?.target?.removeAttribute("style")
+    if (follow_mouse && follow_mouse?.target && elem_under?.attributes?.attachable) {
         do_attach(follow_mouse, elem_under)
+    } else {
+        console.log(follow_mouse)
+        test = follow_mouse
     }
     
     follow_mouse = null
