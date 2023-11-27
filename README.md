@@ -1,5 +1,8 @@
 Lilhx is a to-be frontend framework that introduces a reactive state management system along with features reminiscent of htmx. This framework empowers developers to build dynamic and responsive web applications effortlessly. Here's an elaborate exploration of some key features:
 
+# Demo
+https://github.com/leyuskckiran1510/lilhx/assets/65303319/62c24dde-8c58-4f7e-95eb-ef9a229afb0b
+
 ## Features:
 
 ### Reactive States:
