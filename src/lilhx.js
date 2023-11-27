@@ -71,7 +71,6 @@ const _____lilhx_____ = function(){
                 __temp.outerHTML = x
                 break;
             case elem.attributes.prepend !== undefined:
-                _print(elem,target,x)
                 __temp = document.createElement("div")
                 target.prepend(__temp)
                 __temp.outerHTML = x
@@ -163,7 +162,7 @@ const _____lilhx_____ = function(){
 
         // }
     }
-
+    
     let click_event = (target) => {
         if (!target || target.attributes == undefined) {
             return
@@ -243,12 +242,20 @@ const _____lilhx_____ = function(){
         x.style.cursor = "pointer";
     })
 
-    window.onclick = (event) => {
-        click_event(event.target)
-    };
+    // window.onclick = (event) => {
+
+    //     click_event(event.target)
+
+    // };
 
 
-    let activeMovingDiv = null;
+    let activeMovingDiv = {
+            target: null,
+            event: null,
+            old_bounding_box:null,
+
+
+        };
     window.onmousedown = (event) => {
         if (activeMovingDiv && activeMovingDiv.target) {
             activeMovingDiv.target.removeAttribute("style")
@@ -257,12 +264,11 @@ const _____lilhx_____ = function(){
         activeMovingDiv = {
             target: null,
             event: event,
-            old_state: null,
+            old_bounding_box:JSON.parse( JSON.stringify(event.target.getBoundingClientRect())),
         }
         let srcElement = event.target
         if (srcElement.attributes?.dragable) {
             activeMovingDiv.target = event.target
-            activeMovingDiv.old_state = event.target
         }
         else {
             while (srcElement && srcElement.attributes && srcElement.attributes.dragable == undefined) {
@@ -270,15 +276,10 @@ const _____lilhx_____ = function(){
             }
             if (srcElement.attributes?.dragable) {
                 activeMovingDiv.target = srcElement 
-                activeMovingDiv.old_state = srcElement
             }
         }
     }
 
-    let do_attach = (dragged, _static) => {
-        dragged.target.style.position = dragged.target.style.oldposition
-        _static.append(dragged.target)
-    }
     let SUCESS = 1
     let NOSUCESS = 0
 
@@ -294,7 +295,6 @@ const _____lilhx_____ = function(){
                             __temp.prepend(follow_mouse.target)
                             return SUCESS
                         } else if (__temp.attributes?.before_child) {
-                            console.log("After")
                             __temp.insertBefore(follow_mouse.target, last_child)
                             return SUCESS
                         } else if (__temp.attributes?.after_child) {
@@ -313,7 +313,6 @@ const _____lilhx_____ = function(){
                                 follow_mouse.target.outerHTML = ""
                             return SUCESS
                         }
-                        _print("appending last option", __temp.attributes)
                         __temp.append(follow_mouse.target)
                         return SUCESS
                     }
@@ -325,10 +324,28 @@ const _____lilhx_____ = function(){
         return NOSUCESS
 
     }
+    const TOLORENCE = 10//px
+    let movedFromOldPos = (a,b)=>{
+        let diff_x = Math.abs(a.x - b.x)
+        let diff_y = Math.abs(a.y - b.y)
+        return (diff_x + diff_y)>=TOLORENCE  
+    }
+
     window.onmouseup = (event) => {
         let elem_under = document.elementsFromPoint(event.clientX, event.clientY)
         let preserve_postion = ""
         if (activeMovingDiv && activeMovingDiv.target) {
+            if (activeMovingDiv.event.x==event.x && activeMovingDiv.event.y==event.y){
+                /*This might come handey sometime*/
+                _print("awdawd")
+                try{
+                    click_event(activeMovingDiv.event.target)
+                }catch(e){
+                    
+                }
+                activeMovingDiv=null
+                return
+            }
             activeMovingDiv.target.removeAttribute("moving")
             if (activeMovingDiv.target?.attributes && activeMovingDiv.target?.attributes?.float) {
                 preserve_postion = activeMovingDiv.target?.getAttribute("style")
@@ -336,7 +353,13 @@ const _____lilhx_____ = function(){
             activeMovingDiv.target?.removeAttribute("style")
             if (perform_attachable(elem_under, activeMovingDiv) == NOSUCESS && activeMovingDiv.target?.attributes?.float) {
                 activeMovingDiv.target?.setAttribute("style", preserve_postion)
-                document.body.appendChild(activeMovingDiv.target)
+                const float_on_queryselctor = activeMovingDiv.target.attributes.float.value
+                if(float_on_queryselctor!==undefined && float_on_queryselctor!==""){
+                    const float_on = document.querySelector(float_on_queryselctor)
+                    float_on.appendChild(activeMovingDiv.target)
+                }else{
+                    document.body.appendChild(activeMovingDiv.target)
+                }
             }
         }
         activeMovingDiv = null
@@ -346,25 +369,31 @@ const _____lilhx_____ = function(){
     window.onmousemove = (event) => {
         if (activeMovingDiv && activeMovingDiv.target) {
             let __selection = window.getSelection()
+                __selection.removeAllRanges()
             if (__selection) {
                 __selection.removeAllRanges()
             }
-            test = activeMovingDiv
-            //adding 10% of the div/block width/height to mouse position to make sure the mouse is pointing properly 
-            let xcord = event.clientX + activeMovingDiv.target.clientWidth * 0.1 
-            let ycord = event.clientY + activeMovingDiv.target.clientHeight * 0.1
+            let xcord = event.clientX - activeMovingDiv.target.clientWidth +10
+            if(activeMovingDiv.target.clientWidth>200){
+                xcord = event.clientX - activeMovingDiv.event.offsetX
+            }
+            let ycord = event.clientY - activeMovingDiv.target.clientHeight +10
+            if(activeMovingDiv.target.clientHeight>200){
+                ycord = event.clientY - activeMovingDiv.event.offsetY
+            }
             activeMovingDiv.target.setAttribute("moving", "")
             let new_style = {
+                // position: "sticky",
                 position: "absolute",
+                float:"left",
                 cursor: "pointer",
                 top: `${ycord}px`,
-                left: `${xcord}px`
+                left: `${xcord}px`,
+                zIndex:1
             }
             Object.assign(activeMovingDiv.target.style, new_style)
         }
     }
-
-
 
     if (document.body?.attributes?.nostyle == undefined) {
         var sheet = document.createElement('style')
