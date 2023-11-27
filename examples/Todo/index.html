@@ -5,27 +5,25 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
-    <script src="./lilhx.js"></script>
+    <script src="/src/lilhx.js"></script>
     <style>
         .app-container {
             height: 100vh;
             width: 100%;
         }
-        [crossed]{
+
+        [crossed] {
             text-decoration: line-through;
         }
     </style>
 </head>
 
 <body>
-    <div class="app-container d-flex align-items-center justify-content-center flex-column"
-    statefull>
+    <div class="app-container d-flex align-items-center justify-content-center flex-column" statefull>
         <h3>{APP_NAME}</h3>
         <div class="d-flex align-items-center mb-3">
             <div class="form-group mr-3 mb-0">
-                <input type="text" class="form-control" placeholder="Enter a task here" id="tinput" 
-                oninput=""
-                />
+                <input type="text" class="form-control" placeholder="Enter a task here" id="tinput" oninput="" />
             </div>
             <button type="none" class="btn btn-primary mr-3" clickable fetch="./todo.html" fetch_method="get"
                 handler="todo_func" target=".allTasks">
@@ -48,7 +46,7 @@
         </div>
     </div>
     <script>
-        APP_NAME="TODO in lilhx.js"
+        APP_NAME = "TODO in lilhx.js"
         deleteit = (elem) => {
             elem.parentNode.parentNode.outerHTML = ""
         }

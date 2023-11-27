@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>This is Title </title>
+    <link rel="stylesheet" href="/examples/static/style.css">
+       <script src="/src/lilhx.js"></script>
+    </script>
+    
+</head>
+
+<body save_state load_state>
+      <div class="container">
+    <div class="state_test">
+        <div class="counter" statefull>
+            <div class="increment" clickable handler="incr">
+            </div>
+            <div class="counter_display">
+            Counter : {counter:int}
+            CHAR AT {counter} <span>{theChar:str}</span>
+            {random_variable:str}
+            </div>
+            <div class="decrement" clickable handler="decr">
+            </div>
+        </div>
+    </div>
+    </body>
+<script>
+    // random_variable="this is a random variable"
+    incr = () => {
+        counter++;
+        theChar = String.fromCharCode(counter)
+    }
+    decr = () => {
+        counter--;
+        theChar = String.fromCharCode(counter)
+    }
+</script>
+
+</html>

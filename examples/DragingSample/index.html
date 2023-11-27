@@ -5,63 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drageable Example</title>
-    <style type="text/css">
-        .iam {
-            display: flex;
-            flex-direction: row;
-            background: red;
-            min-width: 10vw;
-            min-height: 10vh;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .iam#\31 {
-            background: royalblue;
-        }
-
-        .iam#\32 {
-            background: darkcyan;
-        }
-
-        .iam#\33 {
-            background: skyblue;
-        }
-
-        .iam#\34 {
-            background: aquamarine;
-        }
-
-        .iam#\35 {
-            background: cadetblue
-        }
-
-        .iam#\36 {
-            background: dodgerblue;
-        }
-
-        .iam>* {
-            position: inherit;
-            background: blue;
-            width: 100px;
-            height: 100px;
-
-            margin: 10px;
-            padding: 0px 10px;
-
-        }
-
-        .noam {
-            position: initial;
-            display: flex;
-            border-radius: 10px;
-            background: green;
-            align-content: center;
-            align-items: center;
-            justify-content: space-around;
-        }
-    </style>
+        <script src="/src/lilhx.js"></script>
+        <link rel="stylesheet" href="/examples/static/style.css">
 </head>
 
 <body>
@@ -109,11 +54,4 @@
     </div>
 
 </body>
-<script type="text/javascript">
-    var clicked = (...x) => {
-        console.log(...x)
-    }
-</script>
-
 </html>
-<script src="/src/lilhx.js"></script>

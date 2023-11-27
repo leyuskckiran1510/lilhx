@@ -1,4 +1,5 @@
-x = function () {
+const _____lilhx_____ = function(){
+    const main_loop = function(MAIN_EVENT){
     "use strict";
 
     let test = null;
@@ -70,14 +71,15 @@ x = function () {
                 __temp.outerHTML = x
                 break;
             case elem.attributes.prepend !== undefined:
+                _print(elem,target,x)
                 __temp = document.createElement("div")
                 target.prepend(__temp)
                 __temp.outerHTML = x
                 break;
             case /^\d+$/.test(elem.attributes?.n_swap?.value):
                 let nth = elem.attributes?.n_swap?.value;
-                nth = nth ? parseInt(nth) : 0;
-                target.children[nth].outerHTML = x;
+                nth = nth ? parseInt(nth) :1;
+                target.children[nth-1].outerHTML = x;
                 break;
             default:
                 console.log(elem.attributes, `Not a valid swap operation`);
@@ -111,7 +113,7 @@ x = function () {
 
         method = method ? method : "get"
 
-        if (elem.attributes.target?.value) {
+        if (elem.attributes.target?.value!==undefined) {
             target = document.querySelector(elem.attributes.target?.value);
         }
     
@@ -121,7 +123,6 @@ x = function () {
                 window[callback](x, y, z)
             }
         }
-    
         if (url && method) {
             c_fetch(url, method, (x) => fetch_callback(elem, target, x), (x) => fetch_error(elem, x))
         } else {
@@ -365,13 +366,24 @@ x = function () {
 
 
 
-    window.onload = load_all;
     if (document.body?.attributes?.nostyle == undefined) {
-    
         var sheet = document.createElement('style')
         sheet.id = "lil_hx_stylesheet"
-        sheet.innerHTML = "[dragable]{cursor:pointer} [moving]{box-shadow:inset 0px 0px 16px 13px #0000004f, 0px 0px 7px 5px #40404078}";
-        document.body.appendChild(sheet);
-    }
+        sheet.innerHTML = `[dragable]{
+                                cursor:move
+                            }
+                            [moving]{
+                                box-shadow:inset 0px 0px 16px 13px #0000004f,
+                                                 0px 0px 7px 5px #40404078
+                            }
+                            [clickable]{
+                                cursor:pointer
+                            }
 
+                            `;
+        document.querySelector("body").appendChild(sheet);
+    }
+    load_all(MAIN_EVENT)
+}
+    window.onload = main_loop;
 }()

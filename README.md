@@ -5,6 +5,7 @@ Lilhx is a to-be frontend framework that introduces a reactive state management 
 ### Reactive States:
 Lilhx incorporates a reactive state management system, enabling developers to effortlessly handle and manipulate the state of their web applications. This reactive approach ensures that changes in state trigger automatic updates, providing a seamless and efficient user experience.
 
+
 ### Event Handling:
 #### i. Click Events:
    - **Verbs:**
