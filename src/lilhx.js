@@ -249,13 +249,16 @@ const _____lilhx_____ = function () {
         window.onclick=(event)=>{
             let srcElement = event.target
             let flag_drag_able=false
-            if(srcElement?.attributes?.dragable!==undefined){
+            if(srcElement?.attributes?.nodrag){
+                click_event(srcElement)
+            }
+            else if(srcElement?.attributes?.dragable!==undefined){
                 return
             }else{
                 while (srcElement && srcElement.attributes && srcElement.attributes.dragable == undefined) {
                     srcElement = srcElement.parentNode
                 }
-                if (srcElement.attributes?.dragable) {
+                if (srcElement?.attributes?.dragable) {
                     flag_drag_able = true
                 }
                 if(!flag_drag_able){
@@ -265,6 +268,9 @@ const _____lilhx_____ = function () {
         }
 
         window.onmousedown = (event) => {
+            if(event.target?.attributes?.nodrag){
+                return
+            }
             if (activeMovingDiv && activeMovingDiv.target) {
                 activeMovingDiv.target.removeAttribute("style")
                 activeMovingDiv = null
@@ -408,6 +414,9 @@ const _____lilhx_____ = function () {
                             }
                             [clickable]{
                                 cursor:pointer
+                            }
+                            [nodrag]{
+                                cursor:default
                             }
 
                             `;

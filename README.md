@@ -36,6 +36,8 @@ Lilhx incorporates a reactive state management system, enabling developers to ef
                     if it not dragged into any attachables,it also doesnot preserves the old state of the element,
                     like it's position,parent,siblings, other feature like attributes,classname and inner/outerHTML 
                     are preserved
+            -Secondary Attribute: `nodrag`:- use this on the child of the dragable div/node
+                        to prevent unnecessary drag event or limit the dragable area
         2. **Attachable:**
             - Attribute: `attachable`
             - **Action:**
