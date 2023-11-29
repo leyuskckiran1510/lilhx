@@ -285,7 +285,9 @@ const _____lilhx_____ = function () {
                 activeMovingDiv.target = event.target
             }
             else {
-                while (srcElement && srcElement.attributes && srcElement.attributes.dragable == undefined) {
+                while (srcElement && srcElement.attributes 
+                       && srcElement.attributes.dragable == undefined 
+                       && srcElement.attributes.nodrag==undefined) {
                     srcElement = srcElement.parentNode
                 }
                 if (srcElement.attributes?.dragable) {
